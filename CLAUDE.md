@@ -1,13 +1,14 @@
 # app-urticaria-tcc — CLAUDE.md
 
-TCC project for tracking urticaria (hives) symptoms on Android, built with Kotlin Multiplatform Mobile and Clean Architecture.
+TCC project for tracking urticaria (hives) symptoms, built with Kotlin Multiplatform Mobile (KMM) and Clean Architecture — targeting Android and iOS.
 
 ## Módulos Gradle
 
 ```
 :app     → Android application (Compose UI, Hilt DI, Navigation)
 :domain  → Pure KMP library (entities, repository interfaces, use cases)
-:data    → KMP library (repository implementations — sem banco de dados por enquanto)
+:data    → KMP library (repository implementations — in-memory, commonMain)
+iosApp/  → iOS application (SwiftUI, consumes UrticariaShared XCFramework)
 ```
 
 Dependency direction: `:app` → `:data` → `:domain`  
@@ -23,11 +24,11 @@ app/
 
 domain/
   entity/        Pure Kotlin data classes (e.g. Urticaria)
-  repository/    Interfaces (UrticariaRepository)
-  usecase/       Orchestration classes (GetUrticariaListUseCase)
 
-data/
-  repository/    UrticariaRepositoryImpl (in-memory, commonMain)
+data/            (vazio por enquanto — sem repositório ou banco de dados)
+
+iosApp/
+  iosApp/        SwiftUI entry point (iOSApp.swift, ContentView.swift)
 ```
 
 ## Tecnologias e versões
@@ -48,21 +49,23 @@ Todas as versões são centralizadas em `gradle/libs.versions.toml`.
 
 ## Source sets (KMP)
 
-`:domain` e `:data` usam o plugin `kotlin.multiplatform`.  
-Por enquanto só `androidTarget()` está declarado — iOS pode ser adicionado sem mudar `:domain`.
+`:domain` e `:data` usam o plugin `kotlin.multiplatform` com targets Android e iOS.
 
 ```
-domain/src/commonMain/   ← todo código do domínio
-data/src/commonMain/     ← UrticariaRepositoryImpl (in-memory)
+domain/src/commonMain/   ← entidades do domínio (Android + iOS)
+data/src/commonMain/     ← vazio por enquanto
 app/src/main/            ← Activity, Composables, DI (Android only)
+iosApp/iosApp/           ← SwiftUI app (iOS only)
 ```
+
+### Targets ativos
+
+Por enquanto apenas `androidTarget()` em `:domain` e `:data`.  
+Targets iOS (`iosArm64`, `iosSimulatorArm64`, `iosX64`) e XCFramework serão adicionados quando o `iosApp` for configurado.
 
 ## Injeção de dependências (Hilt)
 
-`AppModule` (em `:app`) provê:
-- `UrticariaRepository` — implementação `UrticariaRepositoryImpl` (in-memory)
-
-Use cases são instanciados manualmente no ViewModel ou num módulo Hilt específico dentro de `:app`.
+`AppModule` (em `:app`) está vazio por enquanto — sem repositório ou casos de uso registrados.
 
 ## Regras de desenvolvimento
 
@@ -74,10 +77,10 @@ Use cases são instanciados manualmente no ViewModel ou num módulo Hilt especí
 ## Comandos úteis
 
 ```bash
-# Build debug
+# Build debug Android
 ./gradlew :app:assembleDebug
 
-# Instalar no dispositivo/emulador
+# Instalar no dispositivo/emulador Android
 ./gradlew :app:installDebug
 
 # Verificar domínio sem Android
@@ -86,3 +89,10 @@ Use cases são instanciados manualmente no ViewModel ou num módulo Hilt especí
 # Limpar caches
 ./gradlew clean
 ```
+
+## Configuração Xcode (iOS — pendente)
+
+Quando o suporte iOS for necessário:
+1. Adicionar `iosArm64()`, `iosSimulatorArm64()`, `iosX64()` em `:domain` e `:data`.
+2. Configurar XCFramework em `:data` com `export(project(":domain"))`.
+3. Criar projeto Xcode em `iosApp/` e vincular o framework gerado.
