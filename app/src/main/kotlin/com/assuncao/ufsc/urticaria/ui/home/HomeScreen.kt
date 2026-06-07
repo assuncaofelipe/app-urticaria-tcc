@@ -22,12 +22,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Assignment
-import androidx.compose.material.icons.automirrored.filled.MenuBook
-import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.GridView
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.ViewList
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -42,55 +38,22 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.assuncao.ufsc.urticaria.domain.menu.MenuSection
-
-private data class MenuItemUi(
-    val section: MenuSection,
-    val icon: ImageVector,
-    val containerColor: Color,
-    val iconColor: Color,
-)
-
-private val menuItemsUi = listOf(
-    MenuItemUi(
-        section = MenuSection.QUESTIONNAIRES,
-        icon = Icons.AutoMirrored.Filled.Assignment,
-        containerColor = Color(0xFFEDE7F6),
-        iconColor = Color(0xFF5E35B1),
-    ),
-    MenuItemUi(
-        section = MenuSection.REGISTER_LESION,
-        icon = Icons.Filled.CameraAlt,
-        containerColor = Color(0xFFFCE4EC),
-        iconColor = Color(0xFFC62828),
-    ),
-    MenuItemUi(
-        section = MenuSection.WHAT_IS_URTICARIA,
-        icon = Icons.AutoMirrored.Filled.MenuBook,
-        containerColor = Color(0xFFE3F2FD),
-        iconColor = Color(0xFF1565C0),
-    ),
-    MenuItemUi(
-        section = MenuSection.CONTACT,
-        icon = Icons.Filled.Phone,
-        containerColor = Color(0xFFE8F5E9),
-        iconColor = Color(0xFF2E7D32),
-    ),
-)
+import com.assuncao.ufsc.urticaria.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     val isGridView by viewModel.isGridView.collectAsState()
+    val menuItemsUi = remember(viewModel.menuItems) { viewModel.menuItems.map { it.toMenuItemUi() } }
 
     Scaffold(
         topBar = {
@@ -98,12 +61,12 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                 title = {
                     Column {
                         Text(
-                            text = "Diário da minha",
+                            text = stringResource(R.string.home_title_subtitle),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         Text(
-                            text = "Urticária",
+                            text = stringResource(R.string.home_title),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface,
@@ -114,7 +77,9 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                     IconButton(onClick = viewModel::toggleLayout) {
                         Icon(
                             imageVector = if (isGridView) Icons.Filled.ViewList else Icons.Filled.GridView,
-                            contentDescription = if (isGridView) "Ver em lista" else "Ver em grade",
+                            contentDescription = stringResource(
+                                if (isGridView) R.string.action_view_list else R.string.action_view_grid,
+                            ),
                             tint = MaterialTheme.colorScheme.primary,
                         )
                     }
@@ -159,7 +124,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
 }
 
 @Composable
-private fun MenuListCard(item: MenuItemUi) {
+fun MenuListCard(item: MenuItemUi) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -189,12 +154,12 @@ private fun MenuListCard(item: MenuItemUi) {
             }
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = item.section.title,
+                    text = stringResource(item.section.titleRes),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                 )
                 Text(
-                    text = item.section.description,
+                    text = stringResource(item.section.descriptionRes),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -209,7 +174,7 @@ private fun MenuListCard(item: MenuItemUi) {
 }
 
 @Composable
-private fun MenuGridCard(item: MenuItemUi) {
+fun MenuGridCard(item: MenuItemUi) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -241,14 +206,14 @@ private fun MenuGridCard(item: MenuItemUi) {
             }
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = item.section.title,
+                text = stringResource(item.section.titleRes),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = item.section.description,
+                text = stringResource(item.section.descriptionRes),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,

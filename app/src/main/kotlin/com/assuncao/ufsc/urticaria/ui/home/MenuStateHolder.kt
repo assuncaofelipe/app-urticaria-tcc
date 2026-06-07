@@ -1,4 +1,4 @@
-package com.assuncao.ufsc.urticaria.domain.menu
+package com.assuncao.ufsc.urticaria.ui.home
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

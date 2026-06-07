@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Urticaria</string>
+
+    <string name="home_title_subtitle">Diário da minha</string>
+    <string name="home_title">Urticária</string>
+    <string name="action_view_list">Ver em lista</string>
+    <string name="action_view_grid">Ver em grade</string>
+
+    <string name="menu_questionnaires_title">Questionários</string>
+    <string name="menu_questionnaires_desc">Avalie o controle da doença</string>
+    <string name="menu_register_lesion_title">Registrar lesão</string>
+    <string name="menu_register_lesion_desc">Foto e sintomas do dia</string>
+    <string name="menu_what_is_urticaria_title">O que é urticária</string>
+    <string name="menu_what_is_urticaria_desc">Conheça a sua condição</string>
+    <string name="menu_contact_title">Contato</string>
+    <string name="menu_contact_desc">Fale com seu médico</string>
 </resources>
