@@ -1,0 +1,17 @@
+/* TopAppBar / NavigationBar */
+"home_title_subtitle" = "Diário da minha";
+"home_title" = "Urticária";
+
+/* Botão alternar layout */
+"action_view_list" = "Ver em lista";
+"action_view_grid" = "Ver em grade";
+
+/* Seções do menu */
+"menu_questionnaires_title" = "Questionários";
+"menu_questionnaires_desc" = "Avalie o controle da doença";
+"menu_register_lesion_title" = "Registrar lesão";
+"menu_register_lesion_desc" = "Foto e sintomas do dia";
+"menu_what_is_urticaria_title" = "O que é urticária";
+"menu_what_is_urticaria_desc" = "Conheça a sua condição";
+"menu_contact_title" = "Contato";
+"menu_contact_desc" = "Fale com seu médico";

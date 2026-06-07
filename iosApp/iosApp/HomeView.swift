@@ -13,29 +13,29 @@ struct MenuItemData: Identifiable {
 
 private let menuItems: [MenuItemData] = [
     MenuItemData(
-        title: "Questionários",
-        description: "Avalie o controle da doença",
+        title: String(localized: "menu_questionnaires_title"),
+        description: String(localized: "menu_questionnaires_desc"),
         systemIcon: "checklist",
         containerColor: Color(hex: "EDE7F6"),
         iconColor: Color(hex: "5E35B1")
     ),
     MenuItemData(
-        title: "Registrar lesão",
-        description: "Foto e sintomas do dia",
+        title: String(localized: "menu_register_lesion_title"),
+        description: String(localized: "menu_register_lesion_desc"),
         systemIcon: "camera.fill",
         containerColor: Color(hex: "FCE4EC"),
         iconColor: Color(hex: "C62828")
     ),
     MenuItemData(
-        title: "O que é urticária",
-        description: "Conheça a sua condição",
+        title: String(localized: "menu_what_is_urticaria_title"),
+        description: String(localized: "menu_what_is_urticaria_desc"),
         systemIcon: "book.fill",
         containerColor: Color(hex: "E3F2FD"),
         iconColor: Color(hex: "1565C0")
     ),
     MenuItemData(
-        title: "Contato",
-        description: "Fale com seu médico",
+        title: String(localized: "menu_contact_title"),
+        description: String(localized: "menu_contact_desc"),
         systemIcon: "phone.fill",
         containerColor: Color(hex: "E8F5E9"),
         iconColor: Color(hex: "2E7D32")
@@ -59,7 +59,7 @@ struct HomeView: View {
                 }
             }
             .background(Color(hex: "F5F7FF").ignoresSafeArea())
-            .navigationTitle("Urticária")
+            .navigationTitle(String(localized: "home_title"))
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -71,6 +71,11 @@ struct HomeView: View {
                         Image(systemName: isGridView ? "list.bullet" : "square.grid.2x2")
                             .foregroundColor(Color(hex: "5B7FBE"))
                     }
+                    .accessibilityLabel(
+                        isGridView
+                            ? String(localized: "action_view_list")
+                            : String(localized: "action_view_grid")
+                    )
                 }
             }
         }
@@ -105,7 +110,7 @@ struct HomeView: View {
 
 // MARK: - List Card
 
-private struct MenuListCard: View {
+struct MenuListCard: View {
     let item: MenuItemData
 
     var body: some View {
@@ -140,7 +145,7 @@ private struct MenuListCard: View {
 
 // MARK: - Grid Card
 
-private struct MenuGridCard: View {
+struct MenuGridCard: View {
     let item: MenuItemData
 
     var body: some View {

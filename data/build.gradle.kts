@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.multiplatform)
@@ -17,9 +19,18 @@ kotlin {
     jvmToolchain(21)
     androidTarget()
 
+    val xcf = XCFramework("UrticariaShared")
+    listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { target ->
+        target.binaries.framework {
+            baseName = "UrticariaShared"
+            export(project(":domain"))
+            xcf.add(this)
+        }
+    }
+
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":domain"))
+            api(project(":domain"))
             implementation(libs.coroutines.core)
         }
     }

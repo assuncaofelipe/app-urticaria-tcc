@@ -1,0 +1,44 @@
+name: iosApp
+options:
+  bundleIdPrefix: com.assuncao.ufsc.urticaria
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""
+
+targets:
+  iosApp:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: iosApp
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.assuncao.ufsc.urticaria.ios
+        INFOPLIST_FILE: iosApp/Info.plist
+        FRAMEWORK_SEARCH_PATHS: "$(inherited) $(SRCROOT)/../data/build/XCFrameworks/debug $(SRCROOT)/../data/build/XCFrameworks/release"
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks"
+    preBuildScripts:
+      - name: Build KMP XCFramework
+        shell: /bin/sh
+        script: |
+          cd "${SRCROOT}/.."
+          if [ "${CONFIGURATION}" = "Debug" ]; then
+            ./gradlew :data:assembleUrticariaSharedDebugXCFramework 2>&1
+          else
+            ./gradlew :data:assembleUrticariaSharedReleaseXCFramework 2>&1
+          fi
+        outputFiles:
+          - $(SRCROOT)/../data/build/XCFrameworks/debug/UrticariaShared.xcframework
+          - $(SRCROOT)/../data/build/XCFrameworks/release/UrticariaShared.xcframework
+    dependencies:
+      - framework: ../data/build/XCFrameworks/debug/UrticariaShared.xcframework
+        embed: true
+        codeSign: true

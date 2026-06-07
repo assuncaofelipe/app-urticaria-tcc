@@ -134,9 +134,40 @@ Targets iOS (`iosArm64`, `iosSimulatorArm64`, `iosX64`) e XCFramework serão adi
 ./gradlew clean
 ```
 
-## Configuração Xcode (iOS — pendente)
+## Configuração iOS
 
-Quando o suporte iOS for necessário:
-1. Adicionar `iosArm64()`, `iosSimulatorArm64()`, `iosX64()` em `:domain` e `:data`.
-2. Configurar XCFramework em `:data` com `export(project(":domain"))`.
-3. Criar projeto Xcode em `iosApp/` e vincular o framework gerado.
+### Targets KMP ativos
+`:domain` e `:data` compilam para `androidTarget()`, `iosX64()`, `iosArm64()` e `iosSimulatorArm64()`.
+
+### XCFramework
+O módulo `:data` empacota tudo em `UrticariaShared.xcframework` exportando `:domain`:
+
+```bash
+# Debug (desenvolvimento)
+./gradlew :data:assembleUrticariaSharedDebugXCFramework
+
+# Release (produção)
+./gradlew :data:assembleUrticariaSharedReleaseXCFramework
+```
+
+Output: `data/build/XCFrameworks/{debug|release}/UrticariaShared.xcframework`
+
+> A task retorna SKIPPED em Linux (exige macOS + Xcode para linkar os iOS SDKs). A compilação Kotlin para iOS (`:data:compileKotlinIosX64`) funciona em qualquer host.
+
+### Projeto Xcode
+O `iosApp/` usa **XcodeGen** — gerar o `.xcodeproj` em macOS:
+
+```bash
+brew install xcodegen
+cd iosApp
+xcodegen generate
+```
+
+O `project.yml` configura:
+- Fase de pre-build que chama `./gradlew :data:assembleUrticaria...XCFramework` automaticamente
+- Embed + code-sign do `UrticariaShared.xcframework`
+- Target iOS 16+, Swift 5.9
+
+### Localização iOS
+Strings em `iosApp/iosApp/pt-BR.lproj/Localizable.strings` — mesmas chaves do `strings.xml` Android.
+`HomeView.swift` usa `String(localized: "chave")` para resolução em runtime.
